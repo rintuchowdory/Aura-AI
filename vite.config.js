@@ -1,19 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
-  },
+  plugins: [react()],
+  base: '/',
   server: {
     proxy: {
-      '/anthropic': {
-        target: 'https://api.anthropic.com',
+      '/groq': {
+        target: 'https://api.groq.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/anthropic/, ''),
+        rewrite: (path) => path.replace(/^\/groq/, ''),
         secure: true,
       }
     }
