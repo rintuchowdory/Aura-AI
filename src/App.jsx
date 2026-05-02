@@ -122,6 +122,8 @@ export default function App() {
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPTS[0].prompt);
   const [systemLabel, setSystemLabel] = useState(SYSTEM_PROMPTS[0].label);
   const [showSettings, setShowSettings] = useState(false);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem("groq_api_key") || "");
+  const saveApiKey = (k) => { setApiKey(k); localStorage.setItem("groq_api_key", k); };
   const abortRef = useRef(null);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
@@ -142,12 +144,12 @@ export default function App() {
     const controller = new AbortController();
     abortRef.current = controller;
     try {
-      const response = await fetch("/groq/openai/v1/chat/completions", {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + import.meta.env.VITE_GROQ_API_KEY,
+          "Authorization": "Bearer " + apiKey,
         },
         body: JSON.stringify({
           model: model,
@@ -175,7 +177,7 @@ export default function App() {
     setLoading(false);
     abortRef.current = null;
     setTimeout(() => textareaRef.current?.focus(), 100);
-  }, [input, messages, loading, model, systemPrompt]);
+  }, [input, messages, loading, model, systemPrompt, apiKey]);
 
   const stopGeneration = () => { abortRef.current?.abort(); setLoading(false); };
   const clearChat = () => setMessages([]);
@@ -248,6 +250,20 @@ export default function App() {
                 }}>{s.label}</button>
               ))}
             </div>
+          </div>
+          <div style={{ width: "100%" }}>
+            <div style={{ fontSize: "0.7rem", color: "#6b7280", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em" }}>Groq API Key</div>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={e => saveApiKey(e.target.value)}
+              placeholder="gsk_..."
+              style={{
+                background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 8, padding: "6px 12px", color: "#e9d5ff",
+                fontSize: "0.82rem", outline: "none", width: "100%", maxWidth: 320, fontFamily: "monospace"
+              }}
+            />
           </div>
         </div>
       )}
