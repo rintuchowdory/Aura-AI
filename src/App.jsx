@@ -144,12 +144,11 @@ export default function App() {
     const controller = new AbortController();
     abortRef.current = controller;
     try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const response = await fetch("https://groq-proxy.chowdoryrintu.workers.dev", {
         method: "POST",
         signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + apiKey,
         },
         body: JSON.stringify({
           model: model,
