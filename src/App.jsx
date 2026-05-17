@@ -122,7 +122,7 @@ export default function App() {
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPTS[0].prompt);
   const [systemLabel, setSystemLabel] = useState(SYSTEM_PROMPTS[0].label);
   const [showSettings, setShowSettings] = useState(false);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem("groq_api_key") || import.meta.env.VITE_GROQ_API_KEY || "");
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem("groq_api_key") || "");
   const saveApiKey = (k) => { setApiKey(k); localStorage.setItem("groq_api_key", k); };
   const abortRef = useRef(null);
   const bottomRef = useRef(null);
