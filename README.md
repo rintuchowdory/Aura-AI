@@ -1,57 +1,50 @@
-# InterviewAI Coach 🎯
+# Aura AI ✨
 
-An AI-powered technical interview coach with real-time streaming feedback, scoring, and PDF export.
+A fast, beautiful AI assistant + mock interview coach, powered by Groq's LPU inference.
 
-## ✨ Features
+Live at: **https://rintuchowdory.github.io/Aura-AI/**
 
-- 🤖 **AI Interviewer** — Realistic interview questions powered by Llama 3.3 via Groq
-- 📡 **Real-time Streaming** — Watch answers stream in character by character
-- 📄 **PDF Resume Analysis** — Upload your CV to get personalized questions
-- 🌗 **Dark/Light Mode** — Beautiful UI that switches themes
-- 💾 **Chat History** — All sessions saved locally, with stats
-- 📊 **Smart Scoring** — Get scored 0-100 with detailed feedback
-- 📥 **Export to PDF** — Download your interview report
+## Features
 
-## 🚀 Quick Start
+- 💬 **Streaming Chat** — answers stream in live, with tokens/sec speed badge
+- 🌌 **Aurora UI** — animated aurora background, glassmorphism, dark/light theme
+- 🗂️ **Chat Sessions** — sidebar with saved history (localStorage), per-session persona
+- 🎤 **Voice Input** — speak instead of typing (Whisper transcription via Groq)
+- 🌡️ **Controls** — model picker, temperature, max tokens, personas
+- 📤 **Export** — chat as Markdown, or any page as PDF (print)
+- 🧑‍💼 **Interview Mode** — adaptive mock interview for your role & difficulty, optional resume upload (PDF), graded 0–100 with strengths/improvements/tips
+- 📊 **History** — past interview scores with stats
+
+## Architecture
+
+```
+Browser (React 19 + Vite, GitHub Pages)
+   │
+   ▼
+Cloudflare Worker  groq-proxy.chowdoryrintu.workers.dev   ← worker/groq-proxy/
+   │  holds the GROQ_API_KEY server-side, restricts CORS
+   ▼
+Groq API (chat completions, streaming, /models, Whisper transcriptions)
+```
+
+The API key is **never** in the frontend — only in the Worker's secrets. Update it with:
 
 ```bash
-# 1. Install dependencies
+cd worker/groq-proxy
+npx wrangler secret put GROQ_API_KEY
+npx wrangler deploy
+```
+
+## Models
+
+The Worker curates the current Groq lineup and serves it at `GET /models`
+(GPT-OSS 120B/20B, Compound, Qwen3). The frontend auto-refreshes the list.
+
+## Dev
+
+```bash
 npm install
-
-# 2. Add your free Groq API key (console.groq.com)
-echo "VITE_GROQ_API_KEY=gsk_your_key_here" > .env
-
-# 3. Run
 npm run dev
 ```
 
-## 🛠 Tech Stack
-
-- **React 18** — UI framework
-- **Vite** — Build tool
-- **Groq API** — Free AI inference (Llama 3.3 70B)
-- **Streaming** — Real-time SSE token streaming
-- **LocalStorage** — Persistent session history
-- **PDF.js** — Resume parsing
-- **CSS Variables** — Theming system
-
-## 📁 Structure
-
-```
-src/
-├── pages/
-│   ├── Home.jsx       # Job config + file upload
-│   ├── Interview.jsx  # Live chat with streaming AI
-│   ├── Results.jsx    # Score ring + feedback cards
-│   └── History.jsx    # Past sessions
-├── utils/
-│   ├── storage.js     # LocalStorage helpers
-│   ├── pdfReader.js   # PDF text extraction
-│   └── exportPDF.js   # Report generation
-├── App.jsx            # Router + theme
-└── index.css          # Full design system
-```
-
-## 🎓 Resume Highlight
-
-> Built a full-stack AI interview coaching app with real-time LLM streaming, PDF analysis, dynamic scoring, and persistent session history — deployed locally with React + Vite + Groq API.
+Deploy happens automatically on push to `master` via GitHub Actions (ubuntu runner).
