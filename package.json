@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "aura-ai",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -21,6 +21,7 @@
     "lucide-react": "^1.7.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "pdfjs-dist": "^4.7.76"
   }
 }
